@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lol_app/src/core/ui/base_state/base_state.dart';
+import 'package:lol_app/src/pages/details/details_controller.dart';
 import 'package:lol_app/src/pages/home/home_controller.dart';
 import 'package:lol_app/src/pages/home/widgets/card_champion.dart';
 import 'home_state.dart';
@@ -22,11 +23,23 @@ class _HomePageState extends BaseState<HomePage, HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF101114),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Configurações'),
+              onTap: () => Navigator.of(context).pushNamed('/config'),
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
         elevation: 0,
         scrolledUnderElevation: 0,
-        backgroundColor: const Color(0xFF101114),
       ),
       body: BlocConsumer<HomeController, HomeState>(
         builder: (context, state) {
@@ -35,15 +48,27 @@ class _HomePageState extends BaseState<HomePage, HomeController> {
             child: GridView.builder(
               itemCount: state.champions.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 260,
+                crossAxisCount: 3,
+                mainAxisExtent: 180,
                 mainAxisSpacing: 10,
-                crossAxisSpacing: 20,
+                crossAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
                 var champion = state.champions[index];
-                return CardChampion(
-                  champion: champion,
+                var navigator = Navigator.of(context);
+                return InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () async {
+                    showLoader();
+                    await context
+                        .read<DetailsController>()
+                        .getDetails(champion.id);
+                    hideLoarder();
+                    navigator.pushNamed('/details');
+                  },
+                  child: CardChampion(
+                    champion: champion,
+                  ),
                 );
               },
             ),
@@ -52,13 +77,10 @@ class _HomePageState extends BaseState<HomePage, HomeController> {
         listener: (context, state) {
           switch (state.status) {
             case HomeStateStatus.initial:
-              break;
             case HomeStateStatus.loading:
               showLoader();
-              break;
             case HomeStateStatus.loaded:
               hideLoarder();
-              break;
             case HomeStateStatus.error:
               hideLoarder();
               showError(
@@ -68,7 +90,6 @@ class _HomePageState extends BaseState<HomePage, HomeController> {
                   Navigator.of(context).pop();
                 },
               );
-              break;
           }
         },
       ),

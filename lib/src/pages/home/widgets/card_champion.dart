@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lol_app/src/core/contansts/base_urls.dart';
 import 'package:lol_app/src/core/ui/extensions/string_extension.dart';
 import 'package:lol_app/src/models/champion_model.dart';
 
@@ -14,19 +15,21 @@ class CardChampion extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: 200,
-          width: 200,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            image: DecorationImage(
-              image: NetworkImage(
-                  'http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champion.id}_0.jpg'),
-              fit: BoxFit.cover,
+        Hero(
+          tag: champion.id,
+          child: Container(
+            height: 120,
+            width: 120,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: NetworkImage('${BaseUrl.splash}${champion.id}_0.jpg'),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
-        const SizedBox(height: 5),
+        const SizedBox(height: 6),
         Text(
           champion.name,
           style: Theme.of(context).textTheme.titleLarge,
@@ -34,6 +37,8 @@ class CardChampion extends StatelessWidget {
         Expanded(
           child: Text(
             champion.title.capitalFirstLetter(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ),

@@ -4,7 +4,7 @@ import 'package:dio/io.dart';
 class CustomDio extends DioForNative {
   CustomDio()
       : super(BaseOptions(
-          baseUrl: 'http://ddragon.leagueoflegends.com/cdn/13.10.1/data/pt_BR',
+          baseUrl: 'http://ddragon.leagueoflegends.com/cdn',
           connectTimeout: const Duration(seconds: 5),
           receiveTimeout: const Duration(seconds: 60),
         )) {

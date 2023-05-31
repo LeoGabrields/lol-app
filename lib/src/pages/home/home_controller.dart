@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:lol_app/src/pages/home/home_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:lol_app/src/repositories/champions/champions_repository.dart';
@@ -19,8 +18,9 @@ class HomeController extends Cubit<HomeState> {
       log('Error ao buscar champions', error: e, stackTrace: s);
       emit(
         state.copyWith(
-            status: HomeStateStatus.error,
-            erroMessage: 'Error ao buscar champions'),
+          status: HomeStateStatus.error,
+          erroMessage: 'Error ao buscar champions',
+        ),
       );
     }
   }
